@@ -969,6 +969,22 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Rule 5: Cooperative Debt Special Guide -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#guideCoop">
+                                        🏛️ 5. เคล็ดลับจัดการ "หนี้สหกรณ์ออมทรัพย์" (Savings Cooperative)
+                                    </button>
+                                </h2>
+                                <div id="guideCoop" class="accordion-collapse collapse" data-bs-parent="#guideAccordion">
+                                    <div class="accordion-body text-muted small">
+                                        • <strong>ดอกเบี้ยถูกกว่าบัตรเครดิตมาก:</strong> ดอกเบี้ยสหกรณ์ส่วนใหญ่เฉลี่ยอยู่ที่ 4.5% - 6.5% ต่อปี ซึ่งต่ำกว่าบัตรเครดิต (16%) และบัตรกดเงินสด (25%) ตามกลยุทธ์ Avalanche ควรผ่อนตามงวดปกติ แล้วนำเงินโปะไปปิดหนี้ดอกเบี้ยแพงก่อน<br>
+                                        • <strong>มีเงินเฉลี่ยคืน (Dividend/Refund):</strong> สิ้นปีสหกรณ์มักจ่ายเงินเฉลี่ยคืนจากดอกเบี้ยเงินกู้ (ราว 10% - 20% ของดอกเบี้ยที่จ่ายไป) ช่วยลดต้นทุนดอกเบี้ยที่แท้จริงลงได้อีก<br>
+                                        • <strong>ระวังเงินเดือนสุทธิ:</strong> หนี้สหกรณ์มักหักเงินเดือน ณ ที่จ่าย ควรบริหารเงินได้สุทธิหลังหักหนี้สหกรณ์ให้เหลือไม่น้อยกว่า 30% ของเงินเดือน เพื่อรักษาสภาพคล่องไว้ใช้จ่ายในชีวิตประจำวัน
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1024,12 +1040,15 @@
                             <label class="form-label small text-muted fw-bold">เลือกแม่แบบเพื่อกรอกข้อมูลรวดเร็ว (Templates):</label>
                             <select class="form-select form-select-sm" id="templateSelect" onchange="applyDebtTemplate(this.value)">
                                 <option value="">-- กำหนดเอง (Custom) --</option>
-                                <option value="kbank_cc">บัตรเครดิต KBank (16%)</option>
-                                <option value="ktc_proud">บัตรกดเงินสด KTC PROUD (25%)</option>
-                                <option value="scb_speedy">สินเชื่อบุคคล SCB Speedy Loan (20%)</option>
-                                <option value="krungsri_car">สินเชื่อรถยนต์ Krungsri Auto (5.5%)</option>
-                                <option value="ghb_home">สินเชื่อบ้าน ธอส. (4.5%)</option>
-                                <option value="student_loan">หนี้ กยศ. (1%)</option>
+                                <option value="coop_loan">🏛️ สินเชื่อสามัญ สหกรณ์ออมทรัพย์ (5.5%)</option>
+                                <option value="coop_emergency">🏛️ สินเชื่อฉุกเฉิน สหกรณ์ออมทรัพย์ (5.0%)</option>
+                                <option value="coop_special">🏛️ สินเชื่อพิเศษ สหกรณ์ออมทรัพย์ (4.75%)</option>
+                                <option value="kbank_cc">💳 บัตรเครดิต KBank (16%)</option>
+                                <option value="ktc_proud">🏧 บัตรกดเงินสด KTC PROUD (25%)</option>
+                                <option value="scb_speedy">💼 สินเชื่อบุคคล SCB Speedy Loan (20%)</option>
+                                <option value="krungsri_car">🚗 สินเชื่อรถยนต์ Krungsri Auto (5.5%)</option>
+                                <option value="ghb_home">🏠 สินเชื่อบ้าน ธอส. (4.5%)</option>
+                                <option value="student_loan">🎓 หนี้ กยศ. (1%)</option>
                             </select>
                         </div>
 
@@ -1048,6 +1067,7 @@
                             <div class="col-6">
                                 <label class="form-label small fw-bold">หมวดหมู่หนี้</label>
                                 <select class="form-select" id="debtCategory">
+                                    <option value="coop_loan">🏛️ หนี้สหกรณ์ออมทรัพย์</option>
                                     <option value="credit_card">💳 บัตรเครดิต</option>
                                     <option value="cash_card">🏧 บัตรกดเงินสด</option>
                                     <option value="personal_loan">💼 สินเชื่อส่วนบุคคล</option>
@@ -1318,10 +1338,24 @@
                     minimumPayment: 7500,
                     dueDate: 30,
                     priority: 5
+                },
+                {
+                    id: 'debt_6',
+                    name: 'สินเชื่อสามัญ สหกรณ์ออมทรัพย์',
+                    creditor: 'สหกรณ์ออมทรัพย์',
+                    category: 'coop_loan',
+                    type: 'หนี้สหกรณ์ออมทรัพย์',
+                    balance: 150000,
+                    apr: 5.5,
+                    annualRate: 5.5,
+                    minPayment: 3500,
+                    minimumPayment: 3500,
+                    dueDate: 28,
+                    priority: 6
                 }
             ];
 
-            settings.monthlyIncome = 50000;
+            settings.monthlyIncome = 55000;
             settings.monthlyExpenses = 22000;
             settings.extraMonthlyPayment = 3500;
             settings.activeStrategy = 'avalanche';
@@ -1564,6 +1598,7 @@
             if (emptyState) emptyState.classList.add('d-none');
 
             const categoryLabels = {
+                'coop_loan': { label: 'หนี้สหกรณ์ออมทรัพย์', badge: 'bg-info-subtle text-info-emphasis border border-info-subtle' },
                 'credit_card': { label: 'บัตรเครดิต', badge: 'bg-primary-subtle text-primary' },
                 'cash_card': { label: 'บัตรกดเงินสด', badge: 'bg-danger-subtle text-danger' },
                 'personal_loan': { label: 'สินเชื่อส่วนบุคคล', badge: 'bg-warning-subtle text-warning-emphasis' },
@@ -1791,6 +1826,9 @@
         function applyDebtTemplate(tpl) {
             if (!tpl) return;
             const templates = {
+                'coop_loan': { name: 'สินเชื่อสามัญ สหกรณ์ออมทรัพย์', creditor: 'สหกรณ์ออมทรัพย์', category: 'coop_loan', apr: 5.5, min: 4500 },
+                'coop_emergency': { name: 'สินเชื่อฉุกเฉิน สหกรณ์ออมทรัพย์', creditor: 'สหกรณ์ออมทรัพย์', category: 'coop_loan', apr: 5.0, min: 2000 },
+                'coop_special': { name: 'สินเชื่อพิเศษ สหกรณ์ออมทรัพย์', creditor: 'สหกรณ์ออมทรัพย์', category: 'coop_loan', apr: 4.75, min: 7000 },
                 'kbank_cc': { name: 'บัตรเครดิต KBank', creditor: 'ธนาคารกสิกรไทย', category: 'credit_card', apr: 16.0, min: 2000 },
                 'ktc_proud': { name: 'บัตรกดเงินสด KTC PROUD', creditor: 'เคทีซี (KTC)', category: 'cash_card', apr: 25.0, min: 1500 },
                 'scb_speedy': { name: 'สินเชื่อส่วนบุคคล SCB Speedy Loan', creditor: 'ธนาคารไทยพาณิชย์', category: 'personal_loan', apr: 20.0, min: 3000 },
@@ -2393,7 +2431,7 @@
                 });
 
                 const labels = Object.keys(catMap).map(k => {
-                    const dict = { credit_card: 'บัตรเครดิต', cash_card: 'บัตรกดเงินสด', personal_loan: 'สินเชื่อบุคคล', mortgage: 'บ้าน/คอนโด', auto_loan: 'รถยนต์', student_loan: 'กยศ.', other: 'อื่นๆ' };
+                    const dict = { coop_loan: 'สหกรณ์ออมทรัพย์', credit_card: 'บัตรเครดิต', cash_card: 'บัตรกดเงินสด', personal_loan: 'สินเชื่อบุคคล', mortgage: 'บ้าน/คอนโด', auto_loan: 'รถยนต์', student_loan: 'กยศ.', other: 'อื่นๆ' };
                     return dict[k] || k;
                 });
                 const data = Object.values(catMap);
