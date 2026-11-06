@@ -540,6 +540,29 @@
                     </div>
                 </div>
 
+                <!-- Category Filter Pills (แบ่งกลุ่มหนี้ ดูแยกตามหมวดหมู่) -->
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3 p-2 rounded-3 bg-body-tertiary border">
+                    <span class="small text-muted fw-bold me-1"><i class="fa-solid fa-filter text-primary me-1"></i>แยกดูตามกลุ่มหนี้:</span>
+                    <button class="btn btn-sm btn-primary rounded-pill px-3 py-1 debt-filter-btn" id="filterBtn_all" onclick="filterDebtsByCategory('all')">
+                        ทั้งหมด (<span id="count_all">0</span>)
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 debt-filter-btn" id="filterBtn_credit" onclick="filterDebtsByCategory('credit')">
+                        💳 บัตรเครดิต & แบ่งชำระ (<span id="count_credit">0</span>)
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 debt-filter-btn" id="filterBtn_shopee" onclick="filterDebtsByCategory('shopee')">
+                        🛍️ Shopee (<span id="count_shopee">0</span>)
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 debt-filter-btn" id="filterBtn_lazada" onclick="filterDebtsByCategory('lazada')">
+                        🛒 Lazada (<span id="count_lazada">0</span>)
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 debt-filter-btn" id="filterBtn_coop" onclick="filterDebtsByCategory('coop')">
+                        🏛️ สหกรณ์ (<span id="count_coop">0</span>)
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 debt-filter-btn" id="filterBtn_other" onclick="filterDebtsByCategory('other')">
+                        🏠🚗 บ้าน/รถ/อื่นๆ (<span id="count_other">0</span>)
+                    </button>
+                </div>
+
                 <!-- Debt Table -->
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -985,6 +1008,22 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Rule 6: BNPL (Shopee / Lazada) & Installment 0% -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#guideBNPL">
+                                        🛍️ 6. กลยุทธ์จัดการหนี้ Shopee, Lazada และแบ่งชำระบัตรเครดิต 0%
+                                    </button>
+                                </h2>
+                                <div id="guideBNPL" class="accordion-collapse collapse" data-bs-parent="#guideAccordion">
+                                    <div class="accordion-body text-muted small">
+                                        • <strong>แบ่งชำระ 0% บัตรเครดิต "ไม่ต้องรีบโปะ":</strong> เพราะอัตราดอกเบี้ยเป็น 0% การนำเงินก้อนไปโปะปิดหนี้ 0% ไม่ได้ช่วยประหยัดดอกเบี้ยเลย ให้ผ่อนตามงวดปกติเพื่อรักษาสภาพคล่องเงินสดในมือ<br>
+                                        • <strong>Shopee SEasyCash / Lazada LazCash ดอกเบี้ยสูงถึง 25%:</strong> เป็นสินเชื่อเงินสดดิจิทัลที่ดอกเบี้ยสูงในระดับเดียวกับบัตรกดเงินสด ควรจัดลำดับไว้บนสุดตามกลยุทธ์ Avalanche เพื่อรีบปิดให้หมดโดยเร็ว<br>
+                                        • <strong>SPayLater / LazPayLater ปิดเร็วด้วย Snowball:</strong> หนี้ผ่อนสินค้าจากแอปช้อปปิ้งมักมียอดหนี้ไม่สูง (หลักพันถึงหมื่นต้นๆ) การใช้กลยุทธ์ Snowball เร่งปิดทีละรายการให้หมด จะช่วยปลดภาระค่างวดรายเดือนและคืนสภาพคล่องกลับมาได้อย่างรวดเร็ว
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1040,35 +1079,52 @@
                             <label class="form-label small text-muted fw-bold">เลือกแม่แบบเพื่อกรอกข้อมูลรวดเร็ว (Templates):</label>
                             <select class="form-select form-select-sm" id="templateSelect" onchange="applyDebtTemplate(this.value)">
                                 <option value="">-- กำหนดเอง (Custom) --</option>
-                                <option value="coop_loan">🏛️ สินเชื่อสามัญ สหกรณ์ออมทรัพย์ (5.5%)</option>
-                                <option value="coop_emergency">🏛️ สินเชื่อฉุกเฉิน สหกรณ์ออมทรัพย์ (5.0%)</option>
-                                <option value="coop_special">🏛️ สินเชื่อพิเศษ สหกรณ์ออมทรัพย์ (4.75%)</option>
-                                <option value="kbank_cc">💳 บัตรเครดิต KBank (16%)</option>
-                                <option value="ktc_proud">🏧 บัตรกดเงินสด KTC PROUD (25%)</option>
-                                <option value="scb_speedy">💼 สินเชื่อบุคคล SCB Speedy Loan (20%)</option>
-                                <option value="krungsri_car">🚗 สินเชื่อรถยนต์ Krungsri Auto (5.5%)</option>
-                                <option value="ghb_home">🏠 สินเชื่อบ้าน ธอส. (4.5%)</option>
-                                <option value="student_loan">🎓 หนี้ กยศ. (1%)</option>
+                                <optgroup label="🛍️ Shopee & 🛒 Lazada (BNPL & สินเชื่อ)">
+                                    <option value="shopee_spaylater">🛍️ Shopee SPayLater (ผ่อนสินค้า 15%)</option>
+                                    <option value="shopee_seasycash">🛍️ Shopee SEasyCash (เงินสด 25%)</option>
+                                    <option value="lazada_paylater">🛒 Lazada LazPayLater (ผ่อนสินค้า 15%)</option>
+                                    <option value="lazada_lazcash">🛒 Lazada LazCash (เงินสด 25%)</option>
+                                </optgroup>
+                                <optgroup label="💳 แบ่งชำระบัตรเครดิต & บัตรกดเงินสด">
+                                    <option value="cc_installment_0">💳 แบ่งชำระบัตรเครดิต ผ่อน 0% (10 เดือน)</option>
+                                    <option value="cc_installment_fee">💳 แบ่งชำระรายเดือน Call for Cash/Pay (16%)</option>
+                                    <option value="kbank_cc">💳 บัตรเครดิต KBank (16% รูดขั้นต่ำ)</option>
+                                    <option value="ktc_proud">🏧 บัตรกดเงินสด KTC PROUD (25%)</option>
+                                    <option value="scb_speedy">💼 สินเชื่อบุคคล SCB Speedy (20%)</option>
+                                </optgroup>
+                                <optgroup label="🏛️ สหกรณ์ออมทรัพย์">
+                                    <option value="coop_loan">🏛️ สินเชื่อสามัญ สหกรณ์ออมทรัพย์ (5.5%)</option>
+                                    <option value="coop_emergency">🏛️ สินเชื่อฉุกเฉิน สหกรณ์ออมทรัพย์ (5.0%)</option>
+                                    <option value="coop_special">🏛️ สินเชื่อพิเศษ สหกรณ์ออมทรัพย์ (4.75%)</option>
+                                </optgroup>
+                                <optgroup label="🏠🚗 หนี้มีหลักประกัน & การศึกษา">
+                                    <option value="ghb_home">🏠 สินเชื่อบ้าน ธอส. (4.5%)</option>
+                                    <option value="krungsri_car">🚗 สินเชื่อรถยนต์ Krungsri Auto (5.5%)</option>
+                                    <option value="student_loan">🎓 หนี้ กยศ. (1%)</option>
+                                </optgroup>
                             </select>
                         </div>
 
                         <!-- Debt Name -->
                         <div class="mb-3">
                             <label class="form-label small fw-bold">ชื่อรายการหนี้ / บัญชี <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="debtName" placeholder="เช่น บัตรเครดิต KBank, สินเชื่อบ้าน" required>
+                            <input type="text" class="form-control" id="debtName" placeholder="เช่น Shopee SPayLater, ผ่อน 0% iPhone, สหกรณ์ออมทรัพย์" required>
                         </div>
 
                         <!-- Creditor / Bank -->
                         <div class="row g-2 mb-3">
                             <div class="col-6">
                                 <label class="form-label small fw-bold">สถาบันการเงิน / เจ้าหนี้</label>
-                                <input type="text" class="form-control" id="debtCreditor" placeholder="เช่น กสิกรไทย, KTC, SCB">
+                                <input type="text" class="form-control" id="debtCreditor" placeholder="เช่น Shopee, Lazada, KBank, SCB">
                             </div>
                             <div class="col-6">
                                 <label class="form-label small fw-bold">หมวดหมู่หนี้</label>
-                                <select class="form-select" id="debtCategory">
+                                <select class="form-select" id="debtCategory" onchange="autoCalcInstallment()">
+                                    <option value="installment_cc">💳 แบ่งชำระบัตรเครดิต (Installment / ผ่อน 0%)</option>
+                                    <option value="bnpl_shopee">🛍️ Shopee (SPayLater / SEasyCash)</option>
+                                    <option value="bnpl_lazada">🛒 Lazada (LazPayLater / LazCash)</option>
                                     <option value="coop_loan">🏛️ หนี้สหกรณ์ออมทรัพย์</option>
-                                    <option value="credit_card">💳 บัตรเครดิต</option>
+                                    <option value="credit_card">💳 บัตรเครดิต (รูดทั่วไป/จ่ายขั้นต่ำ)</option>
                                     <option value="cash_card">🏧 บัตรกดเงินสด</option>
                                     <option value="personal_loan">💼 สินเชื่อส่วนบุคคล</option>
                                     <option value="mortgage">🏠 หนี้บ้าน / คอนโด</option>
@@ -1084,7 +1140,7 @@
                             <div class="col-6">
                                 <label class="form-label small fw-bold">ยอดหนี้คงเหลือ (บาท) <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control fw-bold" id="debtBalance" placeholder="50000" min="1" step="100" required>
+                                    <input type="number" class="form-control fw-bold" id="debtBalance" placeholder="50000" min="0" step="50" oninput="autoCalcInstallment()" required>
                                     <span class="input-group-text">฿</span>
                                 </div>
                             </div>
@@ -1095,6 +1151,25 @@
                                     <span class="input-group-text">%</span>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Installment / Remaining Months Details -->
+                        <div class="p-3 mb-3 rounded-3 bg-body-tertiary border">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small fw-bold text-primary"><i class="fa-solid fa-clock-rotate-left me-1"></i>ข้อมูลการแบ่งชำระเป็นงวด (สำหรับ ผ่อน 0%, SPayLater, LazPayLater)</span>
+                                <span class="badge bg-secondary-subtle text-secondary small">ไม่บังคับ</span>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-label small">ผ่อนชำระทั้งหมด (งวด)</label>
+                                    <input type="number" class="form-control" id="debtTermMonths" placeholder="เช่น 10" min="1" max="120" oninput="autoCalcInstallment()">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small">งวดคงเหลือปัจจุบัน (งวด)</label>
+                                    <input type="number" class="form-control" id="debtRemainingMonths" placeholder="เช่น 4" min="1" max="120" oninput="autoCalcInstallment()">
+                                </div>
+                            </div>
+                            <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">* ระบบจะช่วยเฉลี่ยค่างวดต่อเดือนให้อัตโนมัติจาก ยอดหนี้ ÷ จำนวนงวด</small>
                         </div>
 
                         <!-- Minimum Monthly Payment & Due Date -->
@@ -1139,8 +1214,9 @@
 
         // State Variables
         let debts = [];
+        let currentDebtFilter = 'all';
         let settings = {
-            monthlyIncome: 50000,
+            monthlyIncome: 55000,
             monthlyExpenses: 22000,
             extraMonthlyPayment: 3500,
             activeStrategy: 'avalanche', // avalanche, snowball, custom
@@ -1168,6 +1244,8 @@
                 dueDay: d.dueDay || d.dueDate || 1,
                 secured: !!d.secured,
                 notes: d.notes || '',
+                termMonths: parseInt(d.termMonths) || null,
+                remainingMonths: parseInt(d.remainingMonths) || null,
                 priority: parseInt(d.priority) || 1
             };
         }
@@ -1270,21 +1348,55 @@
         function loadDemoData(notify = true) {
             debts = [
                 {
-                    id: 'debt_1',
-                    name: 'บัตรเครดิต KBank Platinum',
-                    creditor: 'ธนาคารกสิกรไทย',
-                    category: 'credit_card',
-                    type: 'บัตรเครดิต',
-                    balance: 45000,
-                    apr: 16.0,
-                    annualRate: 16.0,
-                    minPayment: 2250,
-                    minimumPayment: 2250,
-                    dueDate: 25,
+                    id: 'debt_spaylater',
+                    name: 'Shopee SPayLater (ผ่อนของใช้)',
+                    creditor: 'Shopee (SeaMoney)',
+                    category: 'bnpl_shopee',
+                    type: 'หนี้ Shopee (SPayLater)',
+                    balance: 8500,
+                    apr: 15.0,
+                    annualRate: 15.0,
+                    minPayment: 1450,
+                    minimumPayment: 1450,
+                    dueDate: 1,
+                    termMonths: 6,
+                    remainingMonths: 4,
                     priority: 2
                 },
                 {
-                    id: 'debt_2',
+                    id: 'debt_lazpaylater',
+                    name: 'Lazada LazPayLater (ผ่อนสินค้า)',
+                    creditor: 'Lazada',
+                    category: 'bnpl_lazada',
+                    type: 'หนี้ Lazada (LazPayLater)',
+                    balance: 5600,
+                    apr: 15.0,
+                    annualRate: 15.0,
+                    minPayment: 950,
+                    minimumPayment: 950,
+                    dueDate: 5,
+                    termMonths: 6,
+                    remainingMonths: 3,
+                    priority: 3
+                },
+                {
+                    id: 'debt_cc_installment',
+                    name: 'แบ่งชำระ 0% บัตรเครดิต KBank (iPhone)',
+                    creditor: 'ธนาคารกสิกรไทย',
+                    category: 'installment_cc',
+                    type: 'แบ่งชำระ 0% บัตรเครดิต',
+                    balance: 18000,
+                    apr: 0.0,
+                    annualRate: 0.0,
+                    minPayment: 3000,
+                    minimumPayment: 3000,
+                    dueDate: 25,
+                    termMonths: 10,
+                    remainingMonths: 6,
+                    priority: 7
+                },
+                {
+                    id: 'debt_ktc_proud',
                     name: 'บัตรกดเงินสด KTC PROUD',
                     creditor: 'เคทีซี (KTC)',
                     category: 'cash_card',
@@ -1298,49 +1410,21 @@
                     priority: 1
                 },
                 {
-                    id: 'debt_3',
-                    name: 'สินเชื่อส่วนบุคคล SCB Speedy Loan',
+                    id: 'debt_scb_speedy',
+                    name: 'สินเชื่อบุคคล SCB Speedy Loan',
                     creditor: 'ธนาคารไทยพาณิชย์',
                     category: 'personal_loan',
                     type: 'สินเชื่อบุคคล',
-                    balance: 85000,
+                    balance: 75000,
                     apr: 20.0,
                     annualRate: 20.0,
-                    minPayment: 3200,
-                    minimumPayment: 3200,
+                    minPayment: 3000,
+                    minimumPayment: 3000,
                     dueDate: 5,
-                    priority: 3
-                },
-                {
-                    id: 'debt_4',
-                    name: 'สินเชื่อรถยนต์ Krungsri Auto',
-                    creditor: 'กรุงศรี ออโต้',
-                    category: 'auto_loan',
-                    type: 'หนี้รถยนต์',
-                    balance: 240000,
-                    apr: 5.5,
-                    annualRate: 5.5,
-                    minPayment: 5800,
-                    minimumPayment: 5800,
-                    dueDate: 10,
                     priority: 4
                 },
                 {
-                    id: 'debt_5',
-                    name: 'สินเชื่อที่อยู่อาศัย ธอส.',
-                    creditor: 'ธนาคารอาคารสงเคราะห์',
-                    category: 'mortgage',
-                    type: 'หนี้บ้าน',
-                    balance: 1200000,
-                    apr: 4.25,
-                    annualRate: 4.25,
-                    minPayment: 7500,
-                    minimumPayment: 7500,
-                    dueDate: 30,
-                    priority: 5
-                },
-                {
-                    id: 'debt_6',
+                    id: 'debt_coop',
                     name: 'สินเชื่อสามัญ สหกรณ์ออมทรัพย์',
                     creditor: 'สหกรณ์ออมทรัพย์',
                     category: 'coop_loan',
@@ -1351,6 +1435,20 @@
                     minPayment: 3500,
                     minimumPayment: 3500,
                     dueDate: 28,
+                    priority: 5
+                },
+                {
+                    id: 'debt_ghb_home',
+                    name: 'สินเชื่อที่อยู่อาศัย ธอส.',
+                    creditor: 'ธนาคารอาคารสงเคราะห์',
+                    category: 'mortgage',
+                    type: 'หนี้บ้าน',
+                    balance: 1150000,
+                    apr: 4.25,
+                    annualRate: 4.25,
+                    minPayment: 7200,
+                    minimumPayment: 7200,
+                    dueDate: 30,
                     priority: 6
                 }
             ];
@@ -1584,11 +1682,47 @@
             `).join('');
         }
 
+        // Filter Debts By Category
+        function filterDebtsByCategory(cat) {
+            currentDebtFilter = cat;
+            document.querySelectorAll('.debt-filter-btn').forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-outline-secondary');
+            });
+            const activeBtn = document.getElementById('filterBtn_' + cat);
+            if (activeBtn) {
+                activeBtn.classList.remove('btn-outline-secondary');
+                activeBtn.classList.add('btn-primary');
+            }
+            renderDebtsTable();
+        }
+
         // 3. Render Debts Table
         function renderDebtsTable() {
             const tbody = document.getElementById('debtsTableBody');
             const emptyState = document.getElementById('emptyDebtState');
             if (!tbody) return;
+
+            // Update Counts for Filter Buttons
+            const countAll = debts.length;
+            const countCredit = debts.filter(d => ['credit_card', 'installment_cc', 'cash_card'].includes(d.category)).length;
+            const countShopee = debts.filter(d => d.category === 'bnpl_shopee' || (d.name && d.name.toLowerCase().includes('shopee'))).length;
+            const countLazada = debts.filter(d => d.category === 'bnpl_lazada' || (d.name && d.name.toLowerCase().includes('lazada'))).length;
+            const countCoop = debts.filter(d => d.category === 'coop_loan' || (d.name && d.name.includes('สหกรณ์'))).length;
+            const countOther = debts.filter(d => ['mortgage', 'auto_loan', 'student_loan', 'personal_loan', 'informal_debt'].includes(d.category) && !d.name?.toLowerCase().includes('shopee') && !d.name?.toLowerCase().includes('lazada')).length;
+
+            const elCountAll = document.getElementById('count_all');
+            if (elCountAll) elCountAll.textContent = countAll;
+            const elCountCredit = document.getElementById('count_credit');
+            if (elCountCredit) elCountCredit.textContent = countCredit;
+            const elCountShopee = document.getElementById('count_shopee');
+            if (elCountShopee) elCountShopee.textContent = countShopee;
+            const elCountLazada = document.getElementById('count_lazada');
+            if (elCountLazada) elCountLazada.textContent = countLazada;
+            const elCountCoop = document.getElementById('count_coop');
+            if (elCountCoop) elCountCoop.textContent = countCoop;
+            const elCountOther = document.getElementById('count_other');
+            if (elCountOther) elCountOther.textContent = countOther;
 
             if (debts.length === 0) {
                 tbody.innerHTML = '';
@@ -1597,60 +1731,96 @@
             }
             if (emptyState) emptyState.classList.add('d-none');
 
+            // Filter Debts
+            let displayDebts = debts;
+            if (currentDebtFilter === 'credit') {
+                displayDebts = debts.filter(d => ['credit_card', 'installment_cc', 'cash_card'].includes(d.category));
+            } else if (currentDebtFilter === 'shopee') {
+                displayDebts = debts.filter(d => d.category === 'bnpl_shopee' || (d.name && d.name.toLowerCase().includes('shopee')));
+            } else if (currentDebtFilter === 'lazada') {
+                displayDebts = debts.filter(d => d.category === 'bnpl_lazada' || (d.name && d.name.toLowerCase().includes('lazada')));
+            } else if (currentDebtFilter === 'coop') {
+                displayDebts = debts.filter(d => d.category === 'coop_loan' || (d.name && d.name.includes('สหกรณ์')));
+            } else if (currentDebtFilter === 'other') {
+                displayDebts = debts.filter(d => !['credit_card', 'installment_cc', 'cash_card', 'bnpl_shopee', 'bnpl_lazada', 'coop_loan'].includes(d.category));
+            }
+
             const categoryLabels = {
-                'coop_loan': { label: 'หนี้สหกรณ์ออมทรัพย์', badge: 'bg-info-subtle text-info-emphasis border border-info-subtle' },
-                'credit_card': { label: 'บัตรเครดิต', badge: 'bg-primary-subtle text-primary' },
-                'cash_card': { label: 'บัตรกดเงินสด', badge: 'bg-danger-subtle text-danger' },
-                'personal_loan': { label: 'สินเชื่อส่วนบุคคล', badge: 'bg-warning-subtle text-warning-emphasis' },
-                'mortgage': { label: 'หนี้บ้าน/คอนโด', badge: 'bg-success-subtle text-success' },
-                'auto_loan': { label: 'หนี้รถยนต์', badge: 'bg-info-subtle text-info' },
-                'student_loan': { label: 'หนี้ กยศ.', badge: 'bg-secondary-subtle text-secondary' },
-                'informal_debt': { label: 'หนี้อื่นๆ', badge: 'bg-dark-subtle text-dark' }
+                'bnpl_shopee': { label: '🛍️ Shopee (SPayLater)', badge: 'bg-warning-subtle text-danger border border-danger-subtle fw-bold' },
+                'bnpl_lazada': { label: '🛒 Lazada (LazPayLater)', badge: 'bg-primary-subtle text-primary border border-primary-subtle fw-bold' },
+                'installment_cc': { label: '💳 แบ่งชำระบัตรเครดิต', badge: 'bg-info-subtle text-dark border fw-bold' },
+                'coop_loan': { label: '🏛️ หนี้สหกรณ์ออมทรัพย์', badge: 'bg-info-subtle text-info-emphasis border border-info-subtle' },
+                'credit_card': { label: '💳 บัตรเครดิต', badge: 'bg-primary-subtle text-primary' },
+                'cash_card': { label: '🏧 บัตรกดเงินสด', badge: 'bg-danger-subtle text-danger' },
+                'personal_loan': { label: '💼 สินเชื่อส่วนบุคคล', badge: 'bg-warning-subtle text-warning-emphasis' },
+                'mortgage': { label: '🏠 หนี้บ้าน/คอนโด', badge: 'bg-success-subtle text-success' },
+                'auto_loan': { label: '🚗 หนี้รถยนต์', badge: 'bg-info-subtle text-info' },
+                'student_loan': { label: '🎓 หนี้ กยศ.', badge: 'bg-secondary-subtle text-secondary' },
+                'informal_debt': { label: '🤝 หนี้อื่นๆ', badge: 'bg-dark-subtle text-dark' }
             };
 
-            tbody.innerHTML = debts.map((d, index) => {
-                const cat = categoryLabels[d.category] || { label: d.category, badge: 'bg-light text-dark' };
-                return `
-                    <tr>
-                        <td class="text-center fw-bold text-muted">${index + 1}</td>
-                        <td>
-                            <div class="fw-bold text-dark">${d.name}</div>
-                            <small class="text-muted">ลำดับ Priority: ${d.priority || index + 1}</small>
-                        </td>
-                        <td>
-                            <span class="bank-badge bg-body-secondary">${d.creditor || '-'}</span>
-                        </td>
-                        <td>
-                            <span class="badge ${cat.badge}">${cat.label}</span>
-                        </td>
-                        <td class="text-end fw-bold text-danger">
-                            ${formatMoney(d.balance)}
-                        </td>
-                        <td class="text-center">
-                            <span class="badge bg-danger-subtle text-danger fw-bold">${parseFloat(d.apr).toFixed(2)}%</span>
-                        </td>
-                        <td class="text-end fw-bold text-warning-emphasis">
-                            ${formatMoney(d.minPayment)}
-                        </td>
-                        <td class="text-center text-muted small">
-                            ${d.dueDate ? 'ทุกวันที่ ' + d.dueDate : '-'}
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-primary" onclick="editDebt('${d.id}')" title="แก้ไข">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <button class="btn btn-outline-success" onclick="quickPayModal('${d.id}')" title="บันทึกชำระเงินตัดยอด">
-                                    <i class="fa-solid fa-check"></i>
-                                </button>
-                                <button class="btn btn-outline-danger" onclick="deleteDebt('${d.id}')" title="ลบ">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            if (displayDebts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted py-4">ไม่พบรายการหนี้ในกลุ่มนี้</td></tr>`;
+            } else {
+                tbody.innerHTML = displayDebts.map((d, index) => {
+                    const cat = categoryLabels[d.category] || { label: d.category, badge: 'bg-light text-dark' };
+                    
+                    let installmentBadge = '';
+                    if (d.remainingMonths && d.termMonths) {
+                        installmentBadge = `<span class="badge bg-light text-primary border ms-1" style="font-size: 0.72rem;"><i class="fa-solid fa-clock-rotate-left me-1"></i>งวด ${d.remainingMonths}/${d.termMonths}</span>`;
+                    } else if (d.remainingMonths) {
+                        installmentBadge = `<span class="badge bg-light text-primary border ms-1" style="font-size: 0.72rem;"><i class="fa-solid fa-clock-rotate-left me-1"></i>เหลือ ${d.remainingMonths} งวด</span>`;
+                    }
+
+                    const aprBadge = parseFloat(d.apr) === 0
+                        ? `<span class="badge bg-success-subtle text-success fw-bold">0% ดอกเบี้ย</span>`
+                        : `<span class="badge bg-danger-subtle text-danger fw-bold">${parseFloat(d.apr).toFixed(2)}%</span>`;
+
+                    return `
+                        <tr>
+                            <td class="text-center fw-bold text-muted">${index + 1}</td>
+                            <td>
+                                <div class="fw-bold text-dark d-flex align-items-center flex-wrap gap-1">
+                                    ${d.name}
+                                    ${installmentBadge}
+                                </div>
+                                <small class="text-muted">ลำดับ Priority: ${d.priority || index + 1}</small>
+                            </td>
+                            <td>
+                                <span class="bank-badge bg-body-secondary">${d.creditor || '-'}</span>
+                            </td>
+                            <td>
+                                <span class="badge ${cat.badge}">${cat.label}</span>
+                            </td>
+                            <td class="text-end fw-bold text-danger">
+                                ${formatMoney(d.balance)}
+                            </td>
+                            <td class="text-center">
+                                ${aprBadge}
+                            </td>
+                            <td class="text-end fw-bold text-warning-emphasis">
+                                ${formatMoney(d.minPayment)}
+                            </td>
+                            <td class="text-center text-muted small">
+                                ${d.dueDate ? 'ทุกวันที่ ' + d.dueDate : '-'}
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary" onclick="editDebt('${d.id}')" title="แก้ไข">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn btn-outline-success" onclick="quickPayModal('${d.id}')" title="บันทึกชำระเงินตัดยอด">
+                                        <i class="fa-solid fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger" onclick="deleteDebt('${d.id}')" title="ลบ">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
 
             // Totals
             const totalDebt = debts.reduce((sum, d) => sum + (parseFloat(d.balance) || 0), 0);
@@ -1698,10 +1868,14 @@
                 document.getElementById('debtApr').value = debt.apr !== undefined ? debt.apr : '';
                 document.getElementById('debtMinPayment').value = debt.minPayment || '';
                 document.getElementById('debtDueDate').value = debt.dueDate || '';
+                document.getElementById('debtTermMonths').value = debt.termMonths || '';
+                document.getElementById('debtRemainingMonths').value = debt.remainingMonths || '';
                 document.getElementById('debtPriority').value = debt.priority || 1;
             } else {
                 document.getElementById('debtModalTitle').innerHTML = '<i class="fa-solid fa-plus-circle text-primary me-2"></i>เพิ่มรายการหนี้ใหม่';
                 document.getElementById('debtId').value = '';
+                document.getElementById('debtTermMonths').value = '';
+                document.getElementById('debtRemainingMonths').value = '';
                 document.getElementById('debtPriority').value = debts.length + 1;
                 const catEl = document.getElementById('debtCategory');
                 if (catEl) catEl.value = 'credit_card';
@@ -1765,6 +1939,29 @@
             }
         }
 
+        // Auto calculate monthly installment
+        function autoCalcInstallment() {
+            const bal = parseFloat(document.getElementById('debtBalance').value) || 0;
+            const term = parseInt(document.getElementById('debtTermMonths').value) || 0;
+            const rem = parseInt(document.getElementById('debtRemainingMonths').value) || 0;
+            const cat = document.getElementById('debtCategory').value;
+            const minInput = document.getElementById('debtMinPayment');
+            const aprInput = document.getElementById('debtApr');
+
+            if (cat === 'installment_cc') {
+                if (aprInput && (aprInput.value === '' || aprInput.value == '16')) {
+                    aprInput.value = 0;
+                }
+            }
+
+            if (bal > 0 && (term > 0 || rem > 0)) {
+                const divisor = rem > 0 ? rem : term;
+                if (minInput && (!minInput.value || minInput.value == '0')) {
+                    minInput.value = Math.round(bal / divisor);
+                }
+            }
+        }
+
         function saveDebt(event) {
             if (event) event.preventDefault();
             const id = document.getElementById('debtId').value || ('debt_' + Date.now());
@@ -1775,6 +1972,8 @@
             const apr = parseFloat(document.getElementById('debtApr').value);
             const minPayment = parseFloat(document.getElementById('debtMinPayment').value);
             const dueDate = parseInt(document.getElementById('debtDueDate').value) || null;
+            const termMonths = parseInt(document.getElementById('debtTermMonths').value) || null;
+            const remainingMonths = parseInt(document.getElementById('debtRemainingMonths').value) || null;
             const priority = parseInt(document.getElementById('debtPriority').value) || (debts.length + 1);
 
             if (!name) {
@@ -1808,6 +2007,8 @@
                 minimumPayment: minPayment,
                 dueDate,
                 dueDay: dueDate,
+                termMonths,
+                remainingMonths,
                 priority
             };
 
@@ -1826,9 +2027,20 @@
         function applyDebtTemplate(tpl) {
             if (!tpl) return;
             const templates = {
+                // Shopee
+                'shopee_spaylater': { name: 'Shopee SPayLater (ผ่อนสินค้า)', creditor: 'Shopee (SeaMoney)', category: 'bnpl_shopee', apr: 15.0, min: 1200, termMonths: 6, remainingMonths: 4 },
+                'shopee_seasycash': { name: 'Shopee SEasyCash (เงินสด)', creditor: 'Shopee (SeaMoney)', category: 'bnpl_shopee', apr: 25.0, min: 2500, termMonths: 12, remainingMonths: 8 },
+                // Lazada
+                'lazada_paylater': { name: 'Lazada LazPayLater (ผ่อนสินค้า)', creditor: 'Lazada', category: 'bnpl_lazada', apr: 15.0, min: 1000, termMonths: 6, remainingMonths: 4 },
+                'lazada_lazcash': { name: 'Lazada LazCash (เงินสด)', creditor: 'Lazada', category: 'bnpl_lazada', apr: 25.0, min: 2100, termMonths: 12, remainingMonths: 6 },
+                // Credit Card Installments
+                'cc_installment_0': { name: 'ผ่อนชำระ 0% บัตรเครดิต', creditor: 'ธนาคารเจ้าของบัตร', category: 'installment_cc', apr: 0.0, min: 2000, termMonths: 10, remainingMonths: 6 },
+                'cc_installment_fee': { name: 'แบ่งชำระรายเดือน Call for Cash/Pay', creditor: 'ธนาคารเจ้าของบัตร', category: 'installment_cc', apr: 16.0, min: 2800, termMonths: 12, remainingMonths: 9 },
+                // Cooperative
                 'coop_loan': { name: 'สินเชื่อสามัญ สหกรณ์ออมทรัพย์', creditor: 'สหกรณ์ออมทรัพย์', category: 'coop_loan', apr: 5.5, min: 4500 },
                 'coop_emergency': { name: 'สินเชื่อฉุกเฉิน สหกรณ์ออมทรัพย์', creditor: 'สหกรณ์ออมทรัพย์', category: 'coop_loan', apr: 5.0, min: 2000 },
                 'coop_special': { name: 'สินเชื่อพิเศษ สหกรณ์ออมทรัพย์', creditor: 'สหกรณ์ออมทรัพย์', category: 'coop_loan', apr: 4.75, min: 7000 },
+                // Standard Banks
                 'kbank_cc': { name: 'บัตรเครดิต KBank', creditor: 'ธนาคารกสิกรไทย', category: 'credit_card', apr: 16.0, min: 2000 },
                 'ktc_proud': { name: 'บัตรกดเงินสด KTC PROUD', creditor: 'เคทีซี (KTC)', category: 'cash_card', apr: 25.0, min: 1500 },
                 'scb_speedy': { name: 'สินเชื่อส่วนบุคคล SCB Speedy Loan', creditor: 'ธนาคารไทยพาณิชย์', category: 'personal_loan', apr: 20.0, min: 3000 },
@@ -1836,6 +2048,20 @@
                 'ghb_home': { name: 'สินเชื่อบ้าน ธอส.', creditor: 'ธนาคารอาคารสงเคราะห์', category: 'mortgage', apr: 4.5, min: 7000 },
                 'student_loan': { name: 'หนี้ กยศ.', creditor: 'กองทุนเงินให้กู้ยืมเพื่อการศึกษา', category: 'student_loan', apr: 1.0, min: 1200 }
             };
+
+            const data = templates[tpl];
+            if (data) {
+                document.getElementById('debtName').value = data.name;
+                document.getElementById('debtCreditor').value = data.creditor;
+                document.getElementById('debtCategory').value = data.category;
+                document.getElementById('debtApr').value = data.apr !== undefined ? data.apr : 0;
+                if (!document.getElementById('debtMinPayment').value || document.getElementById('debtMinPayment').value == '0') {
+                    document.getElementById('debtMinPayment').value = data.min;
+                }
+                if (data.termMonths) document.getElementById('debtTermMonths').value = data.termMonths;
+                if (data.remainingMonths) document.getElementById('debtRemainingMonths').value = data.remainingMonths;
+            }
+        }
 
             const data = templates[tpl];
             if (data) {
@@ -2431,7 +2657,19 @@
                 });
 
                 const labels = Object.keys(catMap).map(k => {
-                    const dict = { coop_loan: 'สหกรณ์ออมทรัพย์', credit_card: 'บัตรเครดิต', cash_card: 'บัตรกดเงินสด', personal_loan: 'สินเชื่อบุคคล', mortgage: 'บ้าน/คอนโด', auto_loan: 'รถยนต์', student_loan: 'กยศ.', other: 'อื่นๆ' };
+                    const dict = {
+                        bnpl_shopee: 'Shopee (SPayLater)',
+                        bnpl_lazada: 'Lazada (LazPayLater)',
+                        installment_cc: 'แบ่งชำระบัตรเครดิต',
+                        coop_loan: 'สหกรณ์ออมทรัพย์',
+                        credit_card: 'บัตรเครดิต',
+                        cash_card: 'บัตรกดเงินสด',
+                        personal_loan: 'สินเชื่อบุคคล',
+                        mortgage: 'บ้าน/คอนโด',
+                        auto_loan: 'รถยนต์',
+                        student_loan: 'กยศ.',
+                        other: 'อื่นๆ'
+                    };
                     return dict[k] || k;
                 });
                 const data = Object.values(catMap);
@@ -2443,7 +2681,7 @@
                         labels,
                         datasets: [{
                             data,
-                            backgroundColor: ['#6366f1', '#ef4444', '#f59e0b', '#10b981', '#0ea5e9', '#8b5cf6', '#64748b']
+                            backgroundColor: ['#ea580c', '#0284c7', '#8b5cf6', '#0ea5e9', '#6366f1', '#ef4444', '#f59e0b', '#10b981', '#64748b', '#ec4899', '#14b8a6']
                         }]
                     },
                     options: {
